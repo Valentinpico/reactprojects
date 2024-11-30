@@ -1,11 +1,12 @@
 import { useState, ChangeEvent, MouseEvent } from "react";
-import { useBudget } from "../hooks/useBudget";
+
+import { useBudget } from "../../hooks/useBudget";
 
 export const BudgetForm = () => {
   const [budget, setBudget] = useState<number>(0);
   const [budgetValid, setBudgetValid] = useState<boolean>(true);
 
-  const { state, dispatch } = useBudget();
+  const { dispatch, state } = useBudget();
 
   const handleChangueBudget = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
