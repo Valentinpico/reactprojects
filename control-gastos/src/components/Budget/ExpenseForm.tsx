@@ -26,33 +26,41 @@ export const ExpenseForm = () => {
 
     return !(name.length === 0 || Number(amount) <= 0 || category.length === 0);
   };
+
   const handleSubmit = () => {
-    const validInputs = allInputsValids();
-    if (!validInputs) {
+    if (!allInputsValids()) {
       setShowError(true);
       setToastType("error");
       setToastMessage("Por favor, llena todos los campos.");
       setShowToast(true);
       return;
     }
+
     setToastMessage("Gasto agregado correctamente");
     setToastType("success");
     setShowToast(true);
 
-    dispatch({ type: "show-modal", payload: { show: false } });
+    dispatch({ type: "add-expense", payload: { expense } });
+    setExpense({
+      name: "",
+      amount: 0,
+      category: "",
+      date: new Date(),
+    });
   };
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    
     const { value, name } = e.target;
 
-    if (name === "amount" && Number(value) < 0) return;
+    const isAmount = name === "amount";
+
+    if (isAmount && Number(value) < 0) return;
 
     setShowToast(false);
     setExpense({
       ...expense,
-      [name]: value,
+      [name]: isAmount ? +value : value,
     });
   };
 
