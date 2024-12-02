@@ -10,7 +10,7 @@ export type BudgetActions =
 export interface BudgetState {
   budget: number;
   showModal: boolean;
-  expenses: DraftExpenseType[];
+  expenses: ExpenseType[];
 }
 
 export const initialState: BudgetState = {
