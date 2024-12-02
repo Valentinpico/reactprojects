@@ -3,7 +3,11 @@ import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Dialog, Transition } from "@headlessui/react";
 import { useBudget } from "../../../hooks/useBudget";
 
-export const ModalDefault = () => {
+type ModalDefaultProps = {
+  children: React.ReactNode;
+};
+
+export const ModalDefault = ({ children }: ModalDefaultProps) => {
   const { state, dispatch } = useBudget();
 
   const handleModal = (show: boolean) => {
@@ -49,7 +53,9 @@ export const ModalDefault = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"></Dialog.Panel>
+                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  {children}
+                </Dialog.Panel>
               </Transition.Child>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, MouseEvent } from "react";
 
 import { useBudget } from "../../hooks/useBudget";
+import { InputForm } from "../common/inputs/InputForm";
 
 export const BudgetForm = () => {
   const [budget, setBudget] = useState<number>(0);
@@ -10,14 +11,17 @@ export const BudgetForm = () => {
 
   const handleChangueBudget = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    setBudgetValid(value > 0 && !isNaN(value));
+    if (value < 0) return;
+
     setBudget(value);
+    setBudgetValid(value > 0 && !isNaN(value));
   };
 
   const hanndleSubmitBudget = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     setBudgetValid(budget > 0 && !isNaN(budget));
-    if (budget <= 0 || isNaN(budget)) return;
+    if (budget < 0) return;
     dispatch({ type: "add-budget", payload: { budget } });
   };
 
@@ -30,24 +34,18 @@ export const BudgetForm = () => {
           </label>
 
           <div className="text-left">
-            <input
-              type="number"
-              id="budget"
+            <InputForm
               name="budget"
+              type="number"
+              label="Presupuesto"
               placeholder="Ejemplo: 300"
-              value={budget}
+              required
+              errorMessage="El presupuesto debe ser mayor a 0"
+              showError={!budgetValid}
+              validate={(value) => Number(value) > 0}
+              value={budget.toString()}
               onChange={handleChangueBudget}
-              className={`w-full border bg-white border-gray-200 rounded-sm p-2 focus:outline-none focus:ring-1 focus:ring-blue-600 transition ${
-                !budgetValid
-                  ? "focus:ring-1 focus:ring-red-600 border-red-400"
-                  : ""
-              } `}
             />
-            {!budgetValid && (
-              <span className=" text-red-600">
-                Presupuesto debe ser mayor a 0!
-              </span>
-            )}
           </div>
         </div>
 

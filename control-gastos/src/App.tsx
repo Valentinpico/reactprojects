@@ -3,6 +3,7 @@ import { BudgetForm } from "./components/Budget/BudgetForm";
 import { useBudget } from "./hooks/useBudget";
 import { useMemo } from "react";
 import { BudgetTracker } from "./components/Budget/BudgetTracker";
+import { ExpenseForm } from "./components/Budget/ExpenseForm";
 
 function App() {
   const { state } = useBudget();
@@ -19,7 +20,9 @@ function App() {
         {isValidBudget ? <BudgetTracker /> : <BudgetForm />}
       </div>
 
-      <ModalDefault />
+      <ModalDefault>
+        <ExpenseForm />
+      </ModalDefault>
 
       <footer className="text-center text-gray-500 text-sm mt-5">
         &copy; 2021 Planificador de gastos
