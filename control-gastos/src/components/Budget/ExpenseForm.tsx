@@ -5,13 +5,14 @@ import { InputForm } from "../common/inputs/InputForm";
 import { useBudget } from "../../hooks/useBudget";
 import { SelectForm } from "../common/inputs/SelectForm";
 import { Toast } from "../common/toasts/Toast";
+import { DateInputAdapter } from "../common/inputs/DateInputAdapter";
 
 export const ExpenseForm = () => {
   const [showError, setShowError] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<ToastType>("info");
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [formState, setFormState] = useState<DraftExpenseType>({
+  const [expense, setExpense] = useState<DraftExpenseType>({
     name: "",
     amount: 0,
     category: "",
@@ -21,7 +22,7 @@ export const ExpenseForm = () => {
   const { dispatch } = useBudget();
 
   const allInputsValids = () => {
-    const { name, amount, category } = formState;
+    const { name, amount, category } = expense;
 
     return !(name.length === 0 || Number(amount) <= 0 || category.length === 0);
   };
@@ -38,18 +39,27 @@ export const ExpenseForm = () => {
     setToastType("success");
     setShowToast(true);
 
-    
     dispatch({ type: "show-modal", payload: { show: false } });
   };
-  const onchange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    
     const { value, name } = e.target;
 
     if (name === "amount" && Number(value) < 0) return;
 
     setShowToast(false);
-    setFormState({
-      ...formState,
+    setExpense({
+      ...expense,
       [name]: value,
+    });
+  };
+
+  const handleDateChange = (date: DraftExpenseType["date"]) => {
+    setExpense({
+      ...expense,
+      date,
     });
   };
 
@@ -66,8 +76,8 @@ export const ExpenseForm = () => {
           type="text"
           name="name"
           placeholder="Ej. Comida"
-          value={formState.name}
-          onChange={onchange}
+          value={expense.name}
+          onChange={handleChange}
           validate={(value) => value.length > 0}
           errorMessage="El nombre del gasto debe llenarse"
           showError={showError}
@@ -79,8 +89,8 @@ export const ExpenseForm = () => {
           type="number"
           errorMessage="El monto debe ser mayor a 0"
           placeholder="Ej. 100"
-          value={formState.amount.toString()}
-          onChange={onchange}
+          value={expense.amount.toString()}
+          onChange={handleChange}
           validate={(value) => Number(value) > 0}
           showError={showError}
         />
@@ -90,12 +100,19 @@ export const ExpenseForm = () => {
             value: category.id.toString(),
             label: category.name,
           }))}
-          value={formState.category}
+          value={expense.category}
           name="category"
-          onChange={onchange}
+          onChange={handleChange}
           showError={showError}
           required
           errorMessage="Por favor, selecciona una categoría"
+        />
+
+        <DateInputAdapter
+          name="date"
+          label="Fecha"
+          value={expense.date}
+          onChange={handleDateChange}
         />
 
         {showToast && (
