@@ -19,7 +19,9 @@ export const ExpenseCard = ({ expense }: ExpenseCardProps) => {
   const optionsLeading = [
     {
       label: "Editar",
-      onClick: () => dispatch({ type: "show-modal", payload: { show: true } }),
+      onClick: () => {
+        dispatch({ type: "put-id-expense", payload: { id: expense.id } });
+      },
     },
   ];
 

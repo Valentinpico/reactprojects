@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { categories } from "../../data/categories";
-import { DraftExpenseType, ToastType } from "../../types/types";
+import { DraftExpenseType, ExpenseType, ToastType } from "../../types/types";
 import { InputForm } from "../common/inputs/InputForm";
 import { useBudget } from "../../hooks/useBudget";
 import { SelectForm } from "../common/inputs/SelectForm";
@@ -12,15 +12,14 @@ export const ExpenseForm = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<ToastType>("info");
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [editar, setEditar] = useState(false);
-  const [expense, setExpense] = useState<DraftExpenseType>({
+  const [expense, setExpense] = useState<DraftExpenseType | ExpenseType>({
     name: "",
     amount: 0,
     category: "",
     date: new Date(),
   });
 
-  const { dispatch } = useBudget();
+  const { dispatch, state } = useBudget();
 
   const allInputsValids = () => {
     const { name, amount, category } = expense;
@@ -73,15 +72,16 @@ export const ExpenseForm = () => {
   };
 
   useEffect(() => {
-    if (editar) {
-      setExpense({
-        name: "Gasto 1",
-        amount: 100,
-        category: "1",
-        date: new Date(),
-      });
-    }
-  }, [editar]);
+    if (!state.idExpenseUpdate) return;
+
+    const expenseToUpdate = state.expenses.find(
+      (expense) => expense.id === state.idExpenseUpdate
+    );
+
+    if (!expenseToUpdate) return;
+
+    setExpense(expenseToUpdate);
+  }, [state.idExpenseUpdate]);
 
   return (
     <>
@@ -147,7 +147,7 @@ export const ExpenseForm = () => {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
           onClick={handleSubmit}
         >
-          Agregar gasto
+          {state.idExpenseUpdate ? "Agregar gasto" : "Actualizar gasto"}
         </button>
       </div>
     </>

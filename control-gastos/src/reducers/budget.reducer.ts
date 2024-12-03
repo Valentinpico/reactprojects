@@ -6,17 +6,24 @@ export type BudgetActions =
   | { type: "show-modal"; payload: { show: boolean } }
   | { type: "reset-budget" }
   | { type: "add-expense"; payload: { expense: DraftExpenseType } }
-  | { type: "delete-expense"; payload: { id: ExpenseType["id"] } };
+  | { type: "delete-expense"; payload: { id: ExpenseType["id"] } }
+  | { type: "put-id-expense"; payload: { id: ExpenseType["id"] } }
+  | {
+      type: "update-expense";
+      payload: { id: ExpenseType["id"]; expense: ExpenseType };
+    };
 
 export interface BudgetState {
   budget: number;
   showModal: boolean;
+  idExpenseUpdate: ExpenseType["id"];
   expenses: ExpenseType[];
 }
 
 export const initialState: BudgetState = {
   budget: 12,
   showModal: false,
+  idExpenseUpdate: "",
   expenses: [
     {
       id: uuid(),
@@ -45,7 +52,7 @@ export const BudgetReducer = (
   }
 
   if (action.type === "show-modal") {
-    return { ...state, showModal: action.payload.show };
+    return { ...state, showModal: action.payload.show, idExpenseUpdate: "" };
   }
 
   if (action.type === "add-expense") {
@@ -57,6 +64,23 @@ export const BudgetReducer = (
       (expense) => expense.id !== action.payload.id
     );
     return { ...state, expenses: newExpenses };
+  }
+  if (action.type === "update-expense") {
+    const indexExpense = state.expenses.findIndex(
+      (expense) => expense.id === action.payload.id
+    );
+    const newExpenses = [...state.expenses];
+    newExpenses[indexExpense] = action.payload.expense;
+    return { ...state, expenses: newExpenses, idExpenseUpdate: "" };
+    /*     const newExpenses = state.expenses.map((expense) =>
+      expense.id === action.payload.id ? action.payload.expense : expense
+    );
+   
+    return { ...state, expenses: newExpenses, idExpenseUpdate: "" }; */
+  }
+
+  if (action.type === "put-id-expense") {
+    return { ...state, idExpenseUpdate: action.payload.id, showModal: true };
   }
 
   return state;
