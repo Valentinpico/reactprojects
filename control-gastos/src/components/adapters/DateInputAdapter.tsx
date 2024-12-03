@@ -2,7 +2,7 @@ import DatePicker from "react-date-picker";
 
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
-import { Value } from "../../../types/types";
+import { Value } from "../../types/types";
 
 type DateInputAdapterProps = {
   value: Value;

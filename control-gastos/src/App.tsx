@@ -20,9 +20,11 @@ function App() {
       <div className="max-w-3xl m-auto shadow-lg rounded-lg mt-10 p-10">
         {isValidBudget ? <BudgetTracker /> : <BudgetForm />}
       </div>
+
       {isValidBudget && (
         <div className="py-10 mx-auto max-w-3xl">
           <ExpenseList />
+
           <ModalDefault>
             <ExpenseForm />
           </ModalDefault>

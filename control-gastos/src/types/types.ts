@@ -2,6 +2,7 @@ export type CategoryType = {
   id: string;
   name: string;
   icon: string;
+  uri: string;
 };
 
 export type ExpenseType = {

@@ -5,7 +5,8 @@ export type BudgetActions =
   | { type: "add-budget"; payload: { budget: number } }
   | { type: "show-modal"; payload: { show: boolean } }
   | { type: "reset-budget" }
-  | { type: "add-expense"; payload: { expense: DraftExpenseType } };
+  | { type: "add-expense"; payload: { expense: DraftExpenseType } }
+  | { type: "delete-expense"; payload: { id: ExpenseType["id"] } };
 
 export interface BudgetState {
   budget: number;
@@ -14,9 +15,17 @@ export interface BudgetState {
 }
 
 export const initialState: BudgetState = {
-  budget: 0,
+  budget: 12,
   showModal: false,
-  expenses: [],
+  expenses: [
+    {
+      id: uuid(),
+      name: "Gasto 1",
+      amount: 100,
+      category: "1",
+      date: new Date(),
+    },
+  ],
 };
 const createExpense = (expense: DraftExpenseType): ExpenseType => ({
   id: uuid(),
@@ -42,6 +51,12 @@ export const BudgetReducer = (
   if (action.type === "add-expense") {
     const expense: ExpenseType = createExpense(action.payload.expense);
     return { ...state, expenses: [...state.expenses, expense] };
+  }
+  if (action.type === "delete-expense") {
+    const newExpenses = state.expenses.filter(
+      (expense) => expense.id !== action.payload.id
+    );
+    return { ...state, expenses: newExpenses };
   }
 
   return state;

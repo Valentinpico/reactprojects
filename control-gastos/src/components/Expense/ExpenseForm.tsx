@@ -1,17 +1,18 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { categories } from "../../data/categories";
 import { DraftExpenseType, ToastType } from "../../types/types";
 import { InputForm } from "../common/inputs/InputForm";
 import { useBudget } from "../../hooks/useBudget";
 import { SelectForm } from "../common/inputs/SelectForm";
 import { Toast } from "../common/toasts/Toast";
-import { DateInputAdapter } from "../common/inputs/DateInputAdapter";
+import { DateInputAdapter } from "../adapters/DateInputAdapter";
 
 export const ExpenseForm = () => {
   const [showError, setShowError] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<ToastType>("info");
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [editar, setEditar] = useState(false);
   const [expense, setExpense] = useState<DraftExpenseType>({
     name: "",
     amount: 0,
@@ -70,6 +71,17 @@ export const ExpenseForm = () => {
       date,
     });
   };
+
+  useEffect(() => {
+    if (editar) {
+      setExpense({
+        name: "Gasto 1",
+        amount: 100,
+        category: "1",
+        date: new Date(),
+      });
+    }
+  }, [editar]);
 
   return (
     <>
