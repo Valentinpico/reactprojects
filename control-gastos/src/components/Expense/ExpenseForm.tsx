@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { categories } from "../../data/categories";
-import { DraftExpenseType } from "../../types/types";
+import { DraftExpenseType, ToastType } from "../../types/types";
 import { InputForm } from "../common/inputs/InputForm";
 import { useBudget } from "../../hooks/useBudget";
 import { SelectForm } from "../common/inputs/SelectForm";
@@ -9,6 +9,12 @@ import { DateInputAdapter } from "../adapters/DateInputAdapter";
 
 export const ExpenseForm = () => {
   const [showError, setShowError] = useState(false);
+  const [toast, setToast] = useState<ToastType>({
+    isVisible: false,
+    message: "",
+    type: "info",
+    onClose: () => {},
+  });
 
   const [expense, setExpense] = useState<DraftExpenseType>({
     name: "",
@@ -30,34 +36,23 @@ export const ExpenseForm = () => {
   const handleSubmit = () => {
     if (!allInputsValids()) {
       setShowError(true);
-      dispatch({
-        type: "toast-config",
-        payload: {
-          toast: {
-            isVisible: true,
-            message: "Por favor, llena todos los campos",
-            type: "error",
-            onClose: () => {},
-          },
-        },
+
+      setToast({
+        isVisible: true,
+        message: "Por favor, llena todos los campos",
+        type: "error",
+        onClose: () => {},
       });
 
       return;
     }
 
     if (previusAmount + expeseAmountCopy < expense.amount) {
-      dispatch({
-        type: "toast-config",
-        payload: {
-          toast: {
-            isVisible: true,
-            message: `Tu presupuesto es de $${
-              previusAmount + expeseAmountCopy
-            }, no puedes gastar más de eso`,
-            type: "error",
-            onClose: () => {},
-          },
-        },
+      setToast({
+        isVisible: true,
+        message: "No puedes exceder el presupuesto",
+        type: "error",
+        onClose: () => {},
       });
 
       return;
@@ -174,15 +169,15 @@ export const ExpenseForm = () => {
         />
 
         <Toast
-          isVisible={state.toast.isVisible}
-          message={state.toast.message}
+          isVisible={toast.isVisible}
+          message={toast.message}
           onClose={() =>
-            dispatch({
-              type: "toast-config",
-              payload: { toast: { ...state.toast, isVisible: false } },
+            setToast({
+              ...toast,
+              isVisible: false,
             })
           }
-          type={state.toast.type}
+          type={toast.type}
         ></Toast>
 
         <button

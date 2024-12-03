@@ -1,4 +1,4 @@
-import { DraftExpenseType, ExpenseType, Toast } from "../types/types";
+import { DraftExpenseType, ExpenseType, ToastType } from "../types/types";
 import { v4 as uuid } from "uuid";
 
 export type BudgetActions =
@@ -12,14 +12,14 @@ export type BudgetActions =
       payload: { expense: ExpenseType };
     }
   | { type: "show-modal"; payload: { show: boolean } }
-  | { type: "toast-config"; payload: { toast: Toast } };
+  | { type: "toast-config"; payload: { toast: ToastType } };
 
 export interface BudgetState {
   budget: number;
   showModal: boolean;
   idExpenseUpdate: ExpenseType["id"];
   expenses: ExpenseType[];
-  toast: Toast;
+  toast: ToastType;
 }
 
 const getExpenses = (): ExpenseType[] => {
@@ -69,8 +69,16 @@ export const BudgetReducer = (
 
   if (action.type === "add-expense") {
     const expense: ExpenseType = createExpense(action.payload.expense);
+
+    const toast: ToastType = {
+      isVisible: true,
+      message: "Gasto Actualizado",
+      type: "success",
+    };
+
     return {
       ...state,
+      toast,
       expenses: [...state.expenses, expense],
       showModal: false,
     };
@@ -79,7 +87,13 @@ export const BudgetReducer = (
     const newExpenses = state.expenses.filter(
       (expense) => expense.id !== action.payload.id
     );
-    return { ...state, expenses: newExpenses };
+
+    const toast: ToastType = {
+      isVisible: true,
+      message: "Gasto eliminado",
+      type: "success",
+    };
+    return { ...state, expenses: newExpenses, toast };
   }
   if (action.type === "update-expense") {
     const newExpenses = state.expenses.map((expense) =>
@@ -87,9 +101,15 @@ export const BudgetReducer = (
         ? action.payload.expense
         : expense
     );
+    const toast: ToastType = {
+      isVisible: true,
+      message: "Gasto Actualizado",
+      type: "info",
+    };
 
     return {
       ...state,
+      toast,
       expenses: newExpenses,
       idExpenseUpdate: "",
       showModal: false,

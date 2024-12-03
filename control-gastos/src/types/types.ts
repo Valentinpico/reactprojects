@@ -18,12 +18,12 @@ export type DraftExpenseType = Omit<ExpenseType, "id">;
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-export type ToastType = "success" | "error" | "warning" | "info";
+export type TypeToastType = "success" | "error" | "warning" | "info";
 
-export type Toast = {
+export type ToastType = {
   isVisible: boolean;
   message: string;
-  type: ToastType;
+  type: TypeToastType;
   duration?: number;
-  onClose: () => void;
+  onClose?: () => void;
 };

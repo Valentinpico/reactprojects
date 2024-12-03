@@ -1,19 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   XMarkIcon,
   CheckBadgeIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { ToastType } from "../../../types/types";
-
-type ToastProps = {
-  message: string;
-  type: ToastType;
-  duration?: number;
-  onClose: () => void;
-  isVisible: boolean;
-};
+import { TypeToastType } from "../../../types/types";
+import { useToastTimer } from "./useToastTimer";
 
 const STYLES = {
   success: "bg-green-100 border-green-500 text-green-700",
@@ -34,7 +27,13 @@ const ICONS = {
   info: <InformationCircleIcon className="w-10 h-10" />,
   warning: <ExclamationTriangleIcon className="w-10 h-10" />,
 };
-
+type ToastProps = {
+  message: string;
+  type: TypeToastType;
+  duration?: number;
+  onClose: () => void;
+  isVisible: boolean;
+};
 export const Toast = ({
   message,
   type,
@@ -42,19 +41,60 @@ export const Toast = ({
   onClose,
   isVisible,
 }: ToastProps) => {
-  const getTimer = () => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, duration);
+  const [progress, setProgress] = useState(100); // Estado para la barra de progreso
 
-    return () => clearTimeout(timer);
-  };
+  const { handleOnClose } = useToastTimer({ onClose, duration });
 
   useEffect(() => {
-    duration && getTimer();
-  }, [duration, onClose]);
+    if (!duration) return; // Si no hay duración, no configuramos la barra
 
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const progressPercentage = Math.max(100 - (elapsed / duration) * 100, 0);
+      setProgress(progressPercentage);
+
+      if (progressPercentage === 0) {
+        clearInterval(interval);
+        onClose(); // Cerramos automáticamente cuando se acaba el tiempo
+      }
+    }, 100); // Actualización cada 100ms0
+
+    return () => clearInterval(interval); // Limpieza del intervalo al desmontar
+  }, [duration, onClose]);
   return (
+    isVisible && (
+      <div
+        className={`w-full top-4 right-4 z-50 p-4 border-l-4 rounded shadow-md flex items-start space-x-3 ${STYLES[type]} items-center`}
+      >
+        <div className="flex items-center justify-center w-8 h-8">
+          {ICONS[type]}
+        </div>
+
+        <div className="flex-1">
+          <p className="text-sm font-mono uppercase font-extrabold">
+            {TITLE[type]}
+          </p>
+          <p className="text-sm font-mono">{message}</p>
+        </div>
+
+        <button
+          onClick={handleOnClose}
+          className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+        >
+          <XMarkIcon className="w-6 h-6" />
+        </button>
+        {duration && (
+          <div
+            className=" fixed  transition-all bg-blue-500 bg-inherit duration-100"
+            style={{ width: `${progress}%` }}
+          />
+        )}
+      </div>
+    )
+  );
+
+  /*  return (
     isVisible && (
       <div
         className={` w-full top-4 right-4 z-50  p-4 border-l-4 rounded shadow-md flex items-start space-x-3 ${STYLES[type]} items-center`}
@@ -71,12 +111,22 @@ export const Toast = ({
         </div>
 
         <button
-          onClick={onClose}
+          onClick={handleOnClose}
           className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
         >
           <XMarkIcon className="w-6 h-6" />
         </button>
+
+        {duration && (
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200">
+            fadsfasd
+            <div
+              className="h-full bg-blue-500 transition-all duration-100"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
       </div>
     )
-  );
+  ); */
 };
