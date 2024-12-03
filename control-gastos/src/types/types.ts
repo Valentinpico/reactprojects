@@ -19,3 +19,11 @@ type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export type ToastType = "success" | "error" | "warning" | "info";
+
+export type Toast = {
+  isVisible: boolean;
+  message: string;
+  type: ToastType;
+  duration?: number;
+  onClose: () => void;
+};

@@ -12,6 +12,7 @@ type ToastProps = {
   type: ToastType;
   duration?: number;
   onClose: () => void;
+  isVisible: boolean;
 };
 
 const STYLES = {
@@ -34,7 +35,13 @@ const ICONS = {
   warning: <ExclamationTriangleIcon className="w-10 h-10" />,
 };
 
-export const Toast = ({ message, type, duration, onClose }: ToastProps) => {
+export const Toast = ({
+  message,
+  type,
+  duration,
+  onClose,
+  isVisible,
+}: ToastProps) => {
   const getTimer = () => {
     const timer = setTimeout(() => {
       onClose();
@@ -48,26 +55,28 @@ export const Toast = ({ message, type, duration, onClose }: ToastProps) => {
   }, [duration, onClose]);
 
   return (
-    <div
-      className={` w-full top-4 right-4 z-50  p-4 border-l-4 rounded shadow-md flex items-start space-x-3 ${STYLES[type]} items-center`}
-    >
-      <div className="flex items-center justify-center w-8 h-8">
-        {ICONS[type]}
-      </div>
-
-      <div className="flex-1 ">
-        <p className="text-sm font-mono uppercase font-extrabold ">
-          {TITLE[type]}
-        </p>
-        <p className="text-sm font-mono">{message}</p>
-      </div>
-
-      <button
-        onClick={onClose}
-        className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+    isVisible && (
+      <div
+        className={` w-full top-4 right-4 z-50  p-4 border-l-4 rounded shadow-md flex items-start space-x-3 ${STYLES[type]} items-center`}
       >
-        <XMarkIcon className="w-6 h-6" />
-      </button>
-    </div>
+        <div className="flex items-center justify-center w-8 h-8">
+          {ICONS[type]}
+        </div>
+
+        <div className="flex-1 ">
+          <p className="text-sm font-mono uppercase font-extrabold ">
+            {TITLE[type]}
+          </p>
+          <p className="text-sm font-mono">{message}</p>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+        >
+          <XMarkIcon className="w-6 h-6" />
+        </button>
+      </div>
+    )
   );
 };

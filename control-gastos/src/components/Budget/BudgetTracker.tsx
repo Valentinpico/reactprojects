@@ -2,7 +2,7 @@ import { useBudget } from "../../hooks/useBudget";
 import { AmountDisplay } from "./AmountDisplay";
 
 export const BudgetTracker = () => {
-  const { state, totalExpenses, previusAmount } = useBudget();
+  const { state, totalExpenses, previusAmount, dispatch } = useBudget();
 
   return (
     <>
@@ -12,7 +12,13 @@ export const BudgetTracker = () => {
         </section>
 
         <section className="flex flex-col justify-center items-center gap-8">
-          <button className=" bg-pink-600 text-white rounded-md w-full  p-2 font-bold uppercase ">
+          <button
+            className=" bg-pink-600 text-white rounded-md w-full  p-2 font-bold uppercase 
+          "
+            onClick={() => {
+              dispatch({ type: "reset-app" });
+            }}
+          >
             Resetear
           </button>
 

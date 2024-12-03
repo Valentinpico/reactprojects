@@ -1,15 +1,21 @@
 import { ModalDefault } from "./components/common/Modal/ModalDefault";
 import { BudgetForm } from "./components/Budget/BudgetForm";
 import { useBudget } from "./hooks/useBudget";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { BudgetTracker } from "./components/Budget/BudgetTracker";
 import { ExpenseForm } from "./components/Expense/ExpenseForm";
 import { ExpenseList } from "./components/Expense/ExpenseList";
+import { Toast } from "./components/common/toasts/Toast";
 
 function App() {
-  const { state } = useBudget();
+  const { state, dispatch } = useBudget();
 
   const isValidBudget = useMemo(() => state.budget > 0, [state.budget]);
+
+  useEffect(() => {
+    localStorage.setItem("expenses", JSON.stringify(state.expenses));
+    localStorage.setItem("budget", JSON.stringify(state.budget));
+  }, [state.expenses, state.budget]);
 
   return (
     <>
@@ -22,7 +28,20 @@ function App() {
       </div>
 
       {isValidBudget && (
-        <div className="py-10 mx-auto max-w-3xl">
+        <div className="py-6 space-y-5 mx-auto max-w-3xl">
+          <Toast
+            isVisible={state.toast.isVisible}
+            type={state.toast.type}
+            message={state.toast.message}
+            onClose={() =>
+              dispatch({
+                type: "toast-config",
+                payload: { toast: { ...state.toast, isVisible: false } },
+              })
+            }
+            duration={3000}
+          />
+
           <ExpenseList />
 
           <ModalDefault>

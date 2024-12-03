@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { categories } from "../../data/categories";
-import { DraftExpenseType, ToastType } from "../../types/types";
+import { DraftExpenseType } from "../../types/types";
 import { InputForm } from "../common/inputs/InputForm";
 import { useBudget } from "../../hooks/useBudget";
 import { SelectForm } from "../common/inputs/SelectForm";
@@ -9,9 +9,7 @@ import { DateInputAdapter } from "../adapters/DateInputAdapter";
 
 export const ExpenseForm = () => {
   const [showError, setShowError] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastType, setToastType] = useState<ToastType>("info");
-  const [toastMessage, setToastMessage] = useState<string>("");
+
   const [expense, setExpense] = useState<DraftExpenseType>({
     name: "",
     amount: 0,
@@ -32,26 +30,40 @@ export const ExpenseForm = () => {
   const handleSubmit = () => {
     if (!allInputsValids()) {
       setShowError(true);
-      setToastType("error");
-      setToastMessage("Por favor, llena todos los campos.");
-      setShowToast(true);
+      dispatch({
+        type: "toast-config",
+        payload: {
+          toast: {
+            isVisible: true,
+            message: "Por favor, llena todos los campos",
+            type: "error",
+            onClose: () => {},
+          },
+        },
+      });
+
       return;
     }
 
-    setShowToast(true);
+    if (previusAmount + expeseAmountCopy < expense.amount) {
+      dispatch({
+        type: "toast-config",
+        payload: {
+          toast: {
+            isVisible: true,
+            message: `Tu presupuesto es de $${
+              previusAmount + expeseAmountCopy
+            }, no puedes gastar más de eso`,
+            type: "error",
+            onClose: () => {},
+          },
+        },
+      });
+
+      return;
+    }
 
     if (state.idExpenseUpdate) {
-      setToastType("info");
-      setToastMessage("Gasto actualizado correctamente");
-
-      if (previusAmount + expeseAmountCopy < expense.amount) {
-        setToastType("error");
-        setToastMessage(
-          `Tu presupuesto es de $${previusAmount + expeseAmountCopy}`
-        );
-        setShowToast(true);
-        return;
-      }
       dispatch({
         type: "update-expense",
         payload: {
@@ -64,17 +76,8 @@ export const ExpenseForm = () => {
 
       return;
     }
-
-    if (previusAmount - expense.amount < 0) {
-      setToastType("error");
-      setToastMessage(`Tu presupuesto restante es de $${previusAmount}`);
-      setShowToast(true);
-      return;
-    }
-
-    setToastType("success");
-    setToastMessage("Gasto agregado correctamente");
     dispatch({ type: "add-expense", payload: { expense } });
+
     setExpense({
       name: "",
       amount: 0,
@@ -91,7 +94,6 @@ export const ExpenseForm = () => {
 
     if (isAmount && Number(value) < 0) return;
 
-    setShowToast(false);
     setExpense({
       ...expense,
       [name]: isAmount ? +value : value,
@@ -105,17 +107,18 @@ export const ExpenseForm = () => {
     });
   };
 
-  useEffect(() => {
+  const getExpenseToUpdate = () => {
     if (!state.idExpenseUpdate) return;
-
     const expenseToUpdate = state.expenses.find(
       (expense) => expense.id === state.idExpenseUpdate
     );
-
     if (!expenseToUpdate) return;
-
     setExpense(expenseToUpdate);
     setExpenseAmountCopy(expenseToUpdate.amount);
+  };
+
+  useEffect(() => {
+    getExpenseToUpdate();
   }, [state.idExpenseUpdate]);
 
   return (
@@ -170,13 +173,17 @@ export const ExpenseForm = () => {
           onChange={handleDateChange}
         />
 
-        {showToast && (
-          <Toast
-            message={toastMessage}
-            onClose={() => setShowToast(false)}
-            type={toastType}
-          ></Toast>
-        )}
+        <Toast
+          isVisible={state.toast.isVisible}
+          message={state.toast.message}
+          onClose={() =>
+            dispatch({
+              type: "toast-config",
+              payload: { toast: { ...state.toast, isVisible: false } },
+            })
+          }
+          type={state.toast.type}
+        ></Toast>
 
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
