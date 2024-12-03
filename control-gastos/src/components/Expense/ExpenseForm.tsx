@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { categories } from "../../data/categories";
-import { DraftExpenseType, ExpenseType, ToastType } from "../../types/types";
+import { DraftExpenseType, ToastType } from "../../types/types";
 import { InputForm } from "../common/inputs/InputForm";
 import { useBudget } from "../../hooks/useBudget";
 import { SelectForm } from "../common/inputs/SelectForm";
@@ -12,7 +12,7 @@ export const ExpenseForm = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<ToastType>("info");
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [expense, setExpense] = useState<DraftExpenseType | ExpenseType>({
+  const [expense, setExpense] = useState<DraftExpenseType>({
     name: "",
     amount: 0,
     category: "",
@@ -36,10 +36,26 @@ export const ExpenseForm = () => {
       return;
     }
 
-    setToastMessage("Gasto agregado correctamente");
-    setToastType("success");
     setShowToast(true);
 
+    if (state.idExpenseUpdate) {
+      setToastType("info");
+      setToastMessage("Gasto actualizado correctamente");
+      dispatch({
+        type: "update-expense",
+        payload: {
+          expense: {
+            ...expense,
+            id: state.idExpenseUpdate,
+          },
+        },
+      });
+
+      return;
+    }
+
+    setToastType("success");
+    setToastMessage("Gasto agregado correctamente");
     dispatch({ type: "add-expense", payload: { expense } });
     setExpense({
       name: "",
@@ -147,7 +163,7 @@ export const ExpenseForm = () => {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
           onClick={handleSubmit}
         >
-          {state.idExpenseUpdate ? "Agregar gasto" : "Actualizar gasto"}
+          {!state.idExpenseUpdate ? "Agregar gasto" : "Actualizar gasto"}
         </button>
       </div>
     </>
