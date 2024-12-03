@@ -1,20 +1,8 @@
-import { useMemo } from "react";
 import { useBudget } from "../../hooks/useBudget";
 import { AmountDisplay } from "./AmountDisplay";
 
 export const BudgetTracker = () => {
-  const { state } = useBudget();
-
-  const budget = useMemo(() => state.budget, [state.budget]);
-
-  const totalExpenses = useMemo(
-    () => state.expenses.reduce((acc, expense) => acc + expense.amount, 0),
-    [state.expenses]
-  );
-
-  const total = useMemo(() => {
-    return budget - totalExpenses;
-  }, [state.expenses]);
+  const { state, totalExpenses, previusAmount } = useBudget();
 
   return (
     <>
@@ -28,9 +16,9 @@ export const BudgetTracker = () => {
             Resetear
           </button>
 
-          <AmountDisplay label={"Presupuesto"} amount={budget} />
+          <AmountDisplay label={"Presupuesto"} amount={state.budget} />
           <AmountDisplay label={"Gastos"} amount={totalExpenses} />
-          <AmountDisplay label={"Total"} amount={total} />
+          <AmountDisplay label={"Total"} amount={previusAmount} />
         </section>
       </div>
     </>

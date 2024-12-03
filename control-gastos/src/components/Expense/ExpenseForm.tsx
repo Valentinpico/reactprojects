@@ -19,7 +19,9 @@ export const ExpenseForm = () => {
     date: new Date(),
   });
 
-  const { dispatch, state } = useBudget();
+  const [expeseAmountCopy, setExpenseAmountCopy] = useState(0);
+
+  const { dispatch, state, previusAmount } = useBudget();
 
   const allInputsValids = () => {
     const { name, amount, category } = expense;
@@ -41,6 +43,15 @@ export const ExpenseForm = () => {
     if (state.idExpenseUpdate) {
       setToastType("info");
       setToastMessage("Gasto actualizado correctamente");
+
+      if (previusAmount + expeseAmountCopy < expense.amount) {
+        setToastType("error");
+        setToastMessage(
+          `Tu presupuesto es de $${previusAmount + expeseAmountCopy}`
+        );
+        setShowToast(true);
+        return;
+      }
       dispatch({
         type: "update-expense",
         payload: {
@@ -51,6 +62,13 @@ export const ExpenseForm = () => {
         },
       });
 
+      return;
+    }
+
+    if (previusAmount - expense.amount < 0) {
+      setToastType("error");
+      setToastMessage(`Tu presupuesto restante es de $${previusAmount}`);
+      setShowToast(true);
       return;
     }
 
@@ -97,6 +115,7 @@ export const ExpenseForm = () => {
     if (!expenseToUpdate) return;
 
     setExpense(expenseToUpdate);
+    setExpenseAmountCopy(expenseToUpdate.amount);
   }, [state.idExpenseUpdate]);
 
   return (

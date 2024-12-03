@@ -24,8 +24,8 @@ export const SwipeableListAdapter = ({
 }: SwipeableListAdapterProps) => {
   const leadingActions = () => (
     <LeadingActions>
-      {optionsLeading.map((option) => (
-        <SwipeAction onClick={() => option.onClick()}>
+      {optionsLeading.map((option, index) => (
+        <SwipeAction onClick={() => option.onClick()} key={index}>
           {option.label}
         </SwipeAction>
       ))}
@@ -33,8 +33,8 @@ export const SwipeableListAdapter = ({
   );
   const trailingActions = () => (
     <TrailingActions>
-      {optionsTrailing.map((option) => (
-        <SwipeAction onClick={() => option.onClick()}>
+      {optionsTrailing.map((option, index) => (
+        <SwipeAction onClick={() => option.onClick()} key={index}>
           {option.label}
         </SwipeAction>
       ))}

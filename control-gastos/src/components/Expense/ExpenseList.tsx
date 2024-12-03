@@ -12,7 +12,7 @@ export const ExpenseList = () => {
           </h2>
           <ul className="mt-5">
             {state.expenses.map((expense) => (
-              <div className="grid gap-1 ">
+              <div className="grid gap-1" key={expense.id}>
                 <ExpenseCard expense={expense} />
               </div>
             ))}
