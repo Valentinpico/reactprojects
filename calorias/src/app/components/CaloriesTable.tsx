@@ -1,26 +1,7 @@
-import React, { act, use, useMemo } from "react";
-import { Activity } from "../types";
+import { useActivityContext } from "../hooks/useActivityContext";
 
-type CaloriesTableProps = {
-  activities: Activity[];
-};
-export const CaloriesTable = ({ activities }: CaloriesTableProps) => {
-  const totalConsumed = useMemo(
-    () =>
-      activities.reduce(
-        (acc, activity) => (activity.name == 1 ? acc + activity.calories : acc),
-        0
-      ),
-    [activities]
-  );
-  const totalBurned = useMemo(
-    () =>
-      activities.reduce(
-        (acc, act) => (act.name == 2 ? acc + act.calories : acc),
-        0
-      ),
-    [activities]
-  );
+export const CaloriesTable = () => {
+  const { totalConsumed, totalBurned } = useActivityContext();
 
   return (
     <div className="w-6/12 m-auto text-white">

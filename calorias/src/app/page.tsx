@@ -1,14 +1,14 @@
 "use client";
 
-import { Form } from "./components/Form";
-import { use, useEffect, useMemo, useReducer } from "react";
-import { activityReducer, initialState } from "./reducers/activity-reducer";
+import { Form } from "./components/Form/Form";
+import { useEffect, useMemo } from "react";
 import { ActivityList } from "./components/ActivityList";
 import { saveToLocalStorage } from "./db/localStorage";
 import { CaloriesTable } from "./components/CaloriesTable";
+import { useActivityContext } from "./hooks/useActivityContext";
 
 export default function Home() {
-  const [state, dispatch] = useReducer(activityReducer, initialState);
+  const { state, dispatch } = useActivityContext();
 
   const restartApp = () =>
     useMemo(() => state.activities.length, [state.activities]);
@@ -35,20 +35,16 @@ export default function Home() {
       </header>
       <section className="bg-gray-700 py-20 px-5">
         <div className="max-w-4xl mx-auto ">
-          <Form
-            dispatch={dispatch}
-            idActivity={state.id}
-            activities={state.activities}
-          />
+          <Form />
         </div>
       </section>
 
       <section className="bg-gray-900 py-6  ">
-        <CaloriesTable activities={state.activities} />
+        <CaloriesTable />
       </section>
 
       <section className="bg-gray-500 py-28 px-5">
-        <ActivityList dispatch={dispatch} activities={state.activities} />
+        <ActivityList />
       </section>
     </>
   );

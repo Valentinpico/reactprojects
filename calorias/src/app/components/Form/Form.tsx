@@ -1,29 +1,26 @@
 "use client";
-import { Dispatch, use, useEffect } from "react";
-import { Input } from "../common/Input";
-import { categories } from "../data/categories";
-import { useActivity } from "../hooks/useActivity";
-import { ActivityActions } from "../reducers/activity-reducer";
+import { Dispatch, FormEvent, use, useEffect } from "react";
+import { Input } from "../../common/Input";
+import { categories } from "../../data/categories";
+import { useActivityForm } from "../../components/Form/useActivityForm";
+import { ActivityActions } from "../../reducers/activity-reducer";
 import { v4 as uuidv4 } from "uuid";
-import { Activity } from "../types";
+import { Activity } from "../../types";
+import { useActivityContext } from "../../hooks/useActivityContext";
 
-type FormProps = {
-  dispatch: Dispatch<ActivityActions>;
-  idActivity: Activity["id"];
-  activities: Activity[];
-};
-
-export const Form = ({ dispatch, idActivity, activities }: FormProps) => {
+export const Form = () => {
   const { activity, handleChange, validActivity, resetActivity, setActivity } =
-    useActivity();
+    useActivityForm();
 
-  const handleSumit = (e: React.FormEvent<HTMLFormElement>) => {
+  const { state, dispatch } = useActivityContext();
+
+  const handleSumit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (idActivity !== "") {
+    if (state.id !== "") {
       dispatch({
         type: "UPDATE_ACTIVITY",
-        payload: { id: idActivity, newActivity: activity },
+        payload: { id: state.id, newActivity: activity },
       });
       resetActivity();
       return;
@@ -38,13 +35,13 @@ export const Form = ({ dispatch, idActivity, activities }: FormProps) => {
   };
 
   useEffect(() => {
-    const activityFind = activities.find(
-      (activity) => activity.id === idActivity
+    const activityFind = state.activities.find(
+      (activity) => activity.id === state.id
     );
     if (activityFind) {
       setActivity(activityFind);
     }
-  }, [idActivity]);
+  }, [state.id]);
 
   return (
     <form

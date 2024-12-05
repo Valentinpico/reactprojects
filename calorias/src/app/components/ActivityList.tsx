@@ -2,16 +2,14 @@
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Activity } from "../types";
 import { categories } from "../data/categories";
-import { Dispatch } from "react";
-import { ActivityActions } from "../reducers/activity-reducer";
+import { useActivityContext } from "../hooks/useActivityContext";
 
-type ActivityListProps = {
-  activities: Activity[];
-  dispatch: Dispatch<ActivityActions>;
-};
-export const ActivityList = ({ activities, dispatch }: ActivityListProps) => {
+export const ActivityList = () => {
+  const { state, dispatch } = useActivityContext();
   const colorClass = (name: number) =>
     name == 1 ? "bg-amber-600" : "bg-lime-600";
+
+  const activitiesLength = state.activities.length;
 
   const verifyNameActivity = (name: number) => {
     const category = categories.find((category) => category.id === name);
@@ -28,8 +26,8 @@ export const ActivityList = ({ activities, dispatch }: ActivityListProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-6 bg-white w-6/12 m-auto p-5 rounded-sm">
-      {activities.length > 0 &&
-        activities.map((activity) => (
+      {activitiesLength &&
+        state.activities.map((activity) => (
           <div
             className="bg-white py-5 rounded-md   px-5 flex justify-between border border-gray-200"
             key={activity.id}
@@ -61,7 +59,7 @@ export const ActivityList = ({ activities, dispatch }: ActivityListProps) => {
             </div>
           </div>
         ))}
-      {activities.length == 0 && (
+      {!activitiesLength && (
         <div className="bg-white rounded-md m-auto p-5 flex justify-between">
           <p className="font-bold text-2xl m-auto">No hay actividades</p>
         </div>

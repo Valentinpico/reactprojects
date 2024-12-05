@@ -1,12 +1,12 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import { Activity } from "../types/index";
+import { Activity } from "../../types/index";
 const initialStateActivity: Activity = {
   id: "",
   name: 1,
   activity: "",
   calories: 0,
 };
-export const useActivity = () => {
+export const useActivityForm = () => {
   const [activity, setActivity] = useState<Activity>(initialStateActivity);
 
   const resetActivity = () => setActivity(initialStateActivity);

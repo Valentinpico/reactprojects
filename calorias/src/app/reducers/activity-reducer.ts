@@ -8,7 +8,7 @@ export type ActivityActions =
   | { type: "DELETE_ACTIVITY"; payload: { id: Activity["id"] } }
   | { type: "RESET_APP" };
 
-type ActivityState = {
+export type ActivityState = {
   activities: Activity[];
   id: Activity["id"];
 };
