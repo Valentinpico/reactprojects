@@ -27,3 +27,8 @@ export type ToastType = {
   duration?: number;
   onClose?: () => void;
 };
+
+export type SelectOptionType = {
+  value: string;
+  label: string;
+};

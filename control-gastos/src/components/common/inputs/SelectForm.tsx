@@ -1,11 +1,12 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
+import { SelectOptionType } from "../../../types/types";
 
 interface SelectProps {
   label?: string;
   name: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  options: { value: string; label: string }[];
+  options: SelectOptionType[];
   placeholder?: string;
   required?: boolean;
   errorMessage?: string;

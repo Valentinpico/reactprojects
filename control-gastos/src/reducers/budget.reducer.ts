@@ -59,8 +59,7 @@ export const BudgetReducer = (
   }
 
   if (action.type === "reset-app") {
-    localStorage.clear();
-    return { ...initialState };
+    return { ...state, budget: 0, expenses: [] };
   }
 
   if (action.type === "show-modal") {
