@@ -1,20 +1,36 @@
 "use client";
+import { ButtonForm } from "@/modules/common/ButtonForm";
 import { InputForm } from "@/modules/common/Input";
+import { usePatientStore } from "../../../store/usePatientsStore";
+import { PatientDraftType } from "@/types/types";
 import { useState } from "react";
 
 export const PatientForm = () => {
+  const addPatient = usePatientStore((state) => state.addPatient);
+
   const [showError, setShowError] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PatientDraftType>({
     name: "",
     caretaker: "",
-    email: "",
     date: "",
+    email: "",
     symptoms: "",
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     setShowError(true);
+
+    if (!Object.values(formData).every((value) => value)) return;
+
+    addPatient(formData);
+
+    setFormData({
+      caretaker: "",
+      date: "",
+      email: "",
+      name: "",
+      symptoms: "",
+    });
   };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -34,18 +50,14 @@ export const PatientForm = () => {
         <span className="text-indigo-600 font-bold"> Administralos</span>
       </p>
 
-      <form
-        className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
-        noValidate
-        onSubmit={handleSubmit}
-      >
+      <div className="bg-white shadow-md rounded-lg py-10 px-5 mb-10">
         <InputForm
           name="name"
           type="text"
           label="Paciente"
           placeholder="Nombre del Paciente"
           onChangeAction={handleChange}
-          value="adsf"
+          value={formData.name}
           required
           errorMessage="Este campo es obligatorio"
           showError={showError}
@@ -75,27 +87,18 @@ export const PatientForm = () => {
           pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
           showError={showError}
         />
-        <div className="mb-5">
-          <label htmlFor="date" className="text-sm uppercase font-bold">
-            Fecha Alta
-          </label>
-          <input
-            id="date"
-            className="w-full p-3  border border-gray-100"
-            type="date"
-          />
-        </div>
 
-        <div className="mb-5">
-          <label htmlFor="symptoms" className="text-sm uppercase font-bold">
-            Síntomas
-          </label>
-          <textarea
-            id="symptoms"
-            className="w-full p-3  border border-gray-100"
-            placeholder="Síntomas del paciente"
-          ></textarea>
-        </div>
+        <InputForm
+          name="date"
+          value={formData.date}
+          onChangeAction={handleChange}
+          type="date"
+          label="Fecha de Ingreso"
+          required
+          errorMessage="Este campo es obligatorio"
+          showError={showError}
+        />
+
         <InputForm
           name="symptoms"
           value={formData.symptoms}
@@ -107,12 +110,13 @@ export const PatientForm = () => {
           errorMessage="Este campo es obligatorio"
         />
 
-        <input
-          type="submit"
-          className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-          value="Guardar Paciente"
-        />
-      </form>
+        <ButtonForm
+          onClick={handleSubmit}
+          className="w-full bg-blue-500 text-white"
+        >
+          Guardar Paciente
+        </ButtonForm>
+      </div>
     </div>
   );
 };

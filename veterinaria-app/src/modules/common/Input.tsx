@@ -87,6 +87,21 @@ export const InputForm = ({
           id={name}
           value={value}
           onChange={handleChange}
+          placeholder={placeholder}
+          className={`mt-1 block w-full px-3 py-2 border ${
+            error
+              ? "border-red-500  focus:border-red-600 focus:ring-1 focus:ring-red-500"
+              : "border-gray-300"
+          } rounded-md shadow-sm focus:outline-none  focus:border-sky-500`}
+          required={required}
+        />
+      ) : type === "date" ? (
+        <input
+          type={type}
+          name={name}
+          id={name}
+          value={value}
+          onChange={handleChange}
           //onBlur={handleBlur}
           placeholder={placeholder}
           className={`mt-1 block w-full px-3 py-2 border ${

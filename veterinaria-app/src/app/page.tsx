@@ -1,4 +1,5 @@
-import { PatientForm } from "@/modules/pacientes/components/Form";
+import { PatientForm } from "@/modules/pacientes/components/PatientForm";
+import { PatientList } from "@/modules/pacientes/components/PatientList";
 
 export default function Home() {
   return (
@@ -18,7 +19,7 @@ export default function Home() {
             <PatientForm />
           </div>
           <div className="">
-            <PatientForm />
+            <PatientList />
           </div>
         </div>
       </div>
