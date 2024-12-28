@@ -1,6 +1,6 @@
-import { PatientForm } from "./modules/pacientes/components/Form";
+import { PatientForm } from "@/modules/pacientes/components/Form";
 
-function App() {
+export default function Home() {
   return (
     <>
       <div className="mt-10 ">
@@ -18,12 +18,10 @@ function App() {
             <PatientForm />
           </div>
           <div className="">
-        {/*     <PatientForm /> */}
+            <PatientForm />
           </div>
         </div>
       </div>
     </>
   );
 }
-
-export default App;

@@ -40,7 +40,7 @@ export const ExpenseCard = ({ expense }: ExpenseCardProps) => {
         optionsLeading={optionsLeading}
         optionsTrailing={optionsTrailing}
       >
-        <div className="bg-white rounded-md p-10 flex w-full items-center justify-between gap-5">
+        <div className="bg-white rounded-md p-10 flex w-full items-center justify-between gap-5 hover:cursor-pointer">
           <div className="">
             <img
               src={"/icons/" + categoryInfo?.uri}
