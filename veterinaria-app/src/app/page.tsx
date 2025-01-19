@@ -14,13 +14,10 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="grid w-10/12 mt-11 m-auto bg-slate-100 rounded lg:grid-cols-2 gap-3	">
-          <div className="">
-            <PatientForm />
-          </div>
-          <div className="">
-            <PatientList />
-          </div>
+        <div className="grid w-10/12 mt-11 m-auto bg-slate-100 rounded lg:grid-cols-2 px-2 gap-3">
+          <PatientForm />
+
+          <PatientList />
         </div>
       </div>
     </>

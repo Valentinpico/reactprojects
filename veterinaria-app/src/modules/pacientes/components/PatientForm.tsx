@@ -42,7 +42,7 @@ export const PatientForm = () => {
   };
 
   return (
-    <div className="lg:w-full mx-5">
+    <div className="lg:w-full ">
       <h2 className="font-black text-3xl text-center">Seguimiento Pacientes</h2>
 
       <p className="text-lg mt-5 text-center mb-10 ">
