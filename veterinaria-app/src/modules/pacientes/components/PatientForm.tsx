@@ -5,34 +5,32 @@ import { usePatientStore } from "../../../store/usePatientsStore";
 import { PatientDraftType } from "@/types/types";
 import { use, useEffect, useState } from "react";
 
+const initFormData = {
+  name: "",
+  caretaker: "",
+  date: "",
+  email: "",
+  symptoms: "",
+};
+
 export const PatientForm = () => {
   const addPatient = usePatientStore((state) => state.addPatient);
   const activePatient = usePatientStore((state) => state.activePatient);
+  const updatePatient = usePatientStore((state) => state.updatePatient);
 
   const [showError, setShowError] = useState(false);
-  const [formData, setFormData] = useState<PatientDraftType>({
-    name: "",
-    caretaker: "",
-    date: "",
-    email: "",
-    symptoms: "",
-  });
+  const [formData, setFormData] = useState<PatientDraftType>(initFormData);
 
   const handleSubmit = () => {
     setShowError(true);
     if (!Object.values(formData).every((value) => value)) return;
 
-    addPatient(formData);
+    activePatient
+      ? updatePatient({ ...formData, id: activePatient.id })
+      : addPatient(formData);
 
     setShowError(false);
-
-    setFormData({
-      caretaker: "",
-      date: "",
-      email: "",
-      name: "",
-      symptoms: "",
-    });
+    setFormData(initFormData);
   };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,16 +42,9 @@ export const PatientForm = () => {
   };
 
   useEffect(() => {
-    if (activePatient !== null) return;
-
-    setFormData({
-      caretaker: activePatient.caretaker,
-      date: activePatient.date,
-      email: activePatient.email,
-      name: activePatient.name,
-      symptoms: activePatient.symptoms
-    });
-  }, []);
+    if (!activePatient) return;
+    setFormData(activePatient);
+  }, [activePatient]);
 
   return (
     <div className="lg:w-full ">
@@ -128,7 +119,7 @@ export const PatientForm = () => {
           onClick={handleSubmit}
           className="w-full bg-blue-500 text-white"
         >
-          {activePatient !== null ? "Guardar cambios" : "Añadir Paciente"}{" "}
+          {activePatient !== null ? "Guardar cambios" : "Añadir Paciente"}
         </ButtonForm>
       </div>
     </div>

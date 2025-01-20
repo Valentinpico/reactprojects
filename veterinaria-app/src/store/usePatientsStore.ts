@@ -6,8 +6,10 @@ import { v4 as uuidv4 } from "uuid";
 type PatientsStoreType = {
   patients: PatientType[];
   activePatient: PatientType;
+  setActivePatient: (patient: PatientType) => void;
   addPatient: (patient: PatientDraftType) => void;
   getPatients: () => void;
+  updatePatient: (patient: PatientType) => void;
   removePatient: (id: PatientType["id"]) => void;
 };
 
@@ -19,6 +21,20 @@ export const usePatientStore = create<PatientsStoreType>()(
       const patients = localStorage.getItem("patients");
       if (!patients) return;
       set({ patients: JSON.parse(patients) });
+    },
+    setActivePatient(patient) {
+      set({ activePatient: patient });
+    },
+    updatePatient(patient) {
+      set((state) => {
+        const newPatients = state.patients.map((p) =>
+          p.id === patient.id ? patient : p
+        );
+        localStorage.setItem("patients", JSON.stringify(newPatients));
+        return {
+          patients: newPatients,
+        };
+      });
     },
 
     addPatient: (patient) => {

@@ -1,4 +1,5 @@
 import { ButtonForm } from "@/modules/common/ButtonForm";
+import { usePatientStore } from "@/store/usePatientsStore";
 import { PatientType } from "@/types/types";
 import {
   CalendarIcon,
@@ -14,10 +15,14 @@ type CardPatientProps = {
 
 export const CardPatient = ({ patient }: CardPatientProps) => {
   const { name, caretaker, date, email, symptoms, id } = patient;
+
+  const setActivePatient = usePatientStore((state) => state.setActivePatient);
+  const removePatient = usePatientStore((state) => state.removePatient);
+
   return (
     <div className="w-full rounded-lg border bg-white">
       <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-xl font-bold mb-4 text-indigo-700">{name}F</h3>
+        <h3 className="text-xl font-bold mb-4 text-indigo-700">{name}</h3>
         <div className="space-y-2">
           <div className="flex items-center space-x-2 text-sm">
             <HashtagIcon className="h-4 w-4" />
@@ -49,13 +54,13 @@ export const CardPatient = ({ patient }: CardPatientProps) => {
 
           <div className="flex justify-between space-x-2">
             <ButtonForm
-              onClick={() => {}}
+              onClick={() => removePatient(id)}
               className="bg-red-600 text-white w-1/3"
             >
               Eliminar
             </ButtonForm>
             <ButtonForm
-              onClick={() => {}}
+              onClick={() => setActivePatient(patient)}
               className="bg-blue-500 text-white w-1/3"
             >
               Editar
