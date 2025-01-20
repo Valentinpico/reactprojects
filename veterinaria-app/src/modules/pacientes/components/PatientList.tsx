@@ -1,5 +1,4 @@
 "use client";
-import { convertDate } from "@/utils/convertDate";
 import { usePatientStore } from "../../../store/usePatientsStore";
 import { CardPatient } from "./CardPatient";
 
@@ -12,16 +11,14 @@ export const PatientList = () => {
       <h2 className="font-black text-3xl text-center">Listado de pacientes</h2>
       <p className="text-lg mt-5 text-center mb-10 ">
         Acá encontrarás todos los pacientes y sus
-        <span className="text-indigo-600 font-bold"> respectivos dueños </span>
+        <span className="text-indigo-600 font-bold"> respectivos dueños</span>
       </p>
 
-      <div className="bg-white shadow-md rounded-lg py-10 px-5 mb-10">
+      <div className="w-full overflow-y-scroll h-1/2 ">
         {patientsLength ? (
-          <div className="overflow-x-auto">
-            {patients.map((patient) => (
-              <CardPatient patient={patient} key={patient.id} />
-            ))}
-          </div>
+          patients.map((patient) => (
+            <CardPatient patient={patient} key={patient.id} />
+          ))
         ) : (
           <p className="text-center text-lg">No hay pacientes registrados</p>
         )}

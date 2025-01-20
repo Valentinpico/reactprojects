@@ -29,12 +29,6 @@ export default function RootLayout({
         <div
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div className="bg-background text-foreground">
-            <header className="bg-primary text-black p-4">
-              <h1 className="text-2xl font-bold">Create Next App</h1>
-            </header>
-          </div>
-
           {children}
         </div>
       </body>

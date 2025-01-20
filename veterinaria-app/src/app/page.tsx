@@ -1,10 +1,19 @@
+"use client";
+
 import { PatientForm } from "@/modules/pacientes/components/PatientForm";
 import { PatientList } from "@/modules/pacientes/components/PatientList";
+import { usePatientStore } from "@/store/usePatientsStore";
+import { useEffect } from "react";
 
 export default function Home() {
+  const getPaients = usePatientStore((state) => state.getPatients);
+
+  useEffect(() => {
+    getPaients();
+  }, []);
   return (
     <>
-      <div className="mt-10 ">
+      <div className="mt-10">
         <div className=" flex justify-center">
           <h1 className="font-black text-2xl uppercase">
             Agendamiento de pacientes
@@ -14,9 +23,8 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="grid w-10/12 mt-11 m-auto bg-slate-100 rounded lg:grid-cols-2 px-2 gap-3">
+        <div className="grid w-10/12 m-auto bg-slate-300 rounded lg:grid-cols-2 px-2 gap-3 ">
           <PatientForm />
-
           <PatientList />
         </div>
       </div>

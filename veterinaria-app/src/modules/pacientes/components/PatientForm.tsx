@@ -3,10 +3,11 @@ import { ButtonForm } from "@/modules/common/ButtonForm";
 import { InputForm } from "@/modules/common/Input";
 import { usePatientStore } from "../../../store/usePatientsStore";
 import { PatientDraftType } from "@/types/types";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 export const PatientForm = () => {
   const addPatient = usePatientStore((state) => state.addPatient);
+  const activePatient = usePatientStore((state) => state.activePatient);
 
   const [showError, setShowError] = useState(false);
   const [formData, setFormData] = useState<PatientDraftType>({
@@ -19,10 +20,11 @@ export const PatientForm = () => {
 
   const handleSubmit = () => {
     setShowError(true);
-
     if (!Object.values(formData).every((value) => value)) return;
 
     addPatient(formData);
+
+    setShowError(false);
 
     setFormData({
       caretaker: "",
@@ -40,6 +42,18 @@ export const PatientForm = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    if (activePatient !== null) return;
+
+    setFormData({
+      caretaker: activePatient.caretaker,
+      date: activePatient.date,
+      email: activePatient.email,
+      name: activePatient.name,
+      symptoms: activePatient.symptoms
+    });
+  }, []);
 
   return (
     <div className="lg:w-full ">
@@ -114,7 +128,7 @@ export const PatientForm = () => {
           onClick={handleSubmit}
           className="w-full bg-blue-500 text-white"
         >
-          Guardar Paciente
+          {activePatient !== null ? "Guardar cambios" : "Añadir Paciente"}{" "}
         </ButtonForm>
       </div>
     </div>
