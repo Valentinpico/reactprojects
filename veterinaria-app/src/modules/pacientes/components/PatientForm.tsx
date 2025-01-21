@@ -3,7 +3,8 @@ import { ButtonForm } from "@/modules/common/ButtonForm";
 import { InputForm } from "@/modules/common/Input";
 import { usePatientStore } from "../../../store/usePatientsStore";
 import { PatientDraftType } from "@/types/types";
-import { use, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const initFormData = {
   name: "",
@@ -29,11 +30,15 @@ export const PatientForm = () => {
       ? updatePatient({ ...formData, id: activePatient.id })
       : addPatient(formData);
 
+    toast.success(
+      `Paciente ${activePatient ? "actualizado" : "añadido"} correctamente`
+    );
+
     setShowError(false);
     setFormData(initFormData);
   };
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({
       ...formData,
@@ -44,6 +49,7 @@ export const PatientForm = () => {
   useEffect(() => {
     if (!activePatient) return;
     setFormData(activePatient);
+    setShowError(false);
   }, [activePatient]);
 
   return (

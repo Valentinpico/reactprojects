@@ -69,7 +69,11 @@ export const InputForm = ({
   };
 
   useEffect(() => {
-    if (showError) validateInput(value);
+    if (showError) {
+      validateInput(value);
+      return;
+    }
+    setError("");
   }, [showError]);
   return (
     <div className="mb-4">

@@ -5,12 +5,9 @@ import { PatientList } from "@/modules/pacientes/components/PatientList";
 import { usePatientStore } from "@/store/usePatientsStore";
 import { useEffect } from "react";
 
-export default function Home() {
-  const getPaients = usePatientStore((state) => state.getPatients);
+import { ToastContainer } from "react-toastify";
 
-  useEffect(() => {
-    getPaients();
-  }, []);
+export default function Home() {
   return (
     <>
       <div className="mt-10">
@@ -27,6 +24,8 @@ export default function Home() {
           <PatientForm />
           <PatientList />
         </div>
+
+        <ToastContainer />
       </div>
     </>
   );
